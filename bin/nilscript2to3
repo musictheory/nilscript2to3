@@ -1,0 +1,79 @@
+#!/usr/bin/env node 
+
+/*
+  (c) 2013-2018 musictheory.net, LLC
+  MIT license, http://www.opensource.org/licenses/mit-license.php
+*/
+
+"use strict";
+
+const fs        = require("fs");
+const util      = require("util");
+const getopt    = require("node-getopt");
+const _         = require("lodash");
+
+const Rewriter  = require("../src/Rewriter");
+const Checker   = require("../src/Checker");
+
+
+let opt = getopt.create([
+    [ "",  "check",                     "run checker phase"  ],
+    [ "",  "rewrite",                   "run rewriter phase" ],
+    [ "h", "help",                      "display this help"  ],
+    [ "v", "version",                   "show version"       ]
+]);
+
+
+opt.setHelp(
+    "Usage: nilscript2to3 [OPTIONS] INPUT_FILES\n" +
+    "\n" +
+    "[[OPTIONS]]\n"
+);
+
+opt.bindHelp();
+opt.parseSystem();
+
+let argv    = opt.parsedOption.argv;
+let options = opt.parsedOption.options;
+
+
+
+try {
+    _.each(argv, file => {
+        let contents = null;
+
+        try {
+            contents = fs.readFileSync(file).toString();
+        } catch(e) {
+            throw new Error("Could not read: " + file);
+        }
+
+        if (options.rewrite) {
+            let rewriter = new Rewriter(file, contents);
+
+            if (rewriter.parse()) {
+                rewriter.rewrite();
+                
+                fs.writeFileSync(file, rewriter.getOutput());
+
+            } else {
+                throw new Error("Could not parse: " + file);
+            }
+        }
+
+        if (options.check) {
+            let checker = new Checker(file, contents);
+
+            if (checker.parse()) {
+                checker.check();
+            } else {
+                throw new Error("Could not parse: " + file);
+            }
+        }
+
+    });
+
+} catch (e) {
+    console.log(e);
+    process.exit(2);
+}

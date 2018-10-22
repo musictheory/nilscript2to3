@@ -1,0 +1,35 @@
+// (c) 2005-2018 musictheory.net, LLC.  All rights reserved.
+
+(function() {
+
+
+@implementation AllChecks {
+    short _aShort;
+    Bool  _aBool;
+}
+
+
+@property (retain) id unused;
+
+@property id<AllChecksDelegate> unused;
+
+
+@end
+
+
+@implementation ClassProtocolConflict
+@end
+
+@protocol ClassProtocolConflict
+@end
+
+@protocol AllChecksDelegate
+@end
+
+
+@forward TheForwardDeclaration;
+
+@squeeze TheForwardDeclaration;
+
+
+}());

@@ -1,0 +1,21 @@
+// (c) 2005-2018 musictheory.net, LLC.  All rights reserved.
+
+(function() {
+
+
+@class MTScale {
+    _ascendingIntervalTags: Array<MTIntervalTag>;
+    _descendingIntervalTags: Array<MTIntervalTag>;
+    _aString: String, _bString: String, _cString: String;
+}
+
+@property (readonly) tag: MTScaleTag;
+
+
+@property (readonly) foo: String;
+@property (readonly) foo2: id;
+
+
+@end
+
+}());
